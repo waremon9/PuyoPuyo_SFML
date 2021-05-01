@@ -18,7 +18,7 @@ GameManager::GameManager()
 	Framerate = NextWindowUpdate = 1 / 144;
 
 	//Game grid
-	GameGrid = new Grid(6, 10, 60, sf::Vector2f(100, 100));
+	GameGrid = new Grid(6, 10, 65, sf::Vector2f(100, 100));
 }
 
 GameManager* GameManager::getInstance()
