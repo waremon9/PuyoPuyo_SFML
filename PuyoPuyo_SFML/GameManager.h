@@ -1,6 +1,8 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
+class Grid;
+
 class GameManager
 {
 private:
@@ -11,6 +13,8 @@ private:
 	float DeltaTime;
 	float Framerate;
 	float NextWindowUpdate;
+
+	Grid* GameGrid;
 
 public:
 	GameManager();
@@ -23,5 +27,6 @@ public:
 	void drawOnWindow(sf::Drawable*);
 
 	static GameManager* getInstance();
+	sf::RenderWindow* getWindow() const;
 };
 

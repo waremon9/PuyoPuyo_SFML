@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "SFML/Graphics.hpp"
+#include "Grid.h"
 
 GameManager* GameManager::Instance = nullptr;
 
@@ -15,6 +16,9 @@ GameManager::GameManager()
 
 	//set window update frequency
 	Framerate = NextWindowUpdate = 1 / 144;
+
+	//Game grid
+	GameGrid = new Grid(6, 10, 60, sf::Vector2f(100, 100));
 }
 
 GameManager* GameManager::getInstance()
@@ -25,6 +29,11 @@ GameManager* GameManager::getInstance()
 	return Instance;
 }
 
+sf::RenderWindow* GameManager::getWindow() const
+{
+	return window;
+}
+
 void GameManager::loop()
 {
 	while (window->isOpen())
@@ -32,6 +41,8 @@ void GameManager::loop()
 		updateDeltaTime();
 
 		manageEvent();
+
+		updateWindow();
 	}
 }
 
@@ -59,6 +70,8 @@ void GameManager::updateWindow()
 		NextWindowUpdate = Framerate;
 
 		window->clear();
+
+		GameGrid->Draw();
 
 		window->display();
 	}
