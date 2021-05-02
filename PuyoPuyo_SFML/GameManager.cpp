@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "SFML/Graphics.hpp"
 #include "Grid.h"
+#include "Puyo.h"
 
 GameManager* GameManager::Instance = nullptr;
 
@@ -18,7 +19,7 @@ GameManager::GameManager()
 	Framerate = NextWindowUpdate = 1 / 144;
 
 	//Game grid
-	GameGrid = new Grid(6, 10, 65, sf::Vector2f(100, 100));
+	GameGrid = new Grid(GridSize, CellSize, GridPosition);
 }
 
 GameManager* GameManager::getInstance()
@@ -59,6 +60,9 @@ void GameManager::manageEvent()
 	{
 		if (event.type == sf::Event::Closed)
 			window->close();
+
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+			ActualPuyo = createPuyo();
 	}
 }
 
@@ -72,9 +76,21 @@ void GameManager::updateWindow()
 		window->clear();
 
 		GameGrid->Draw();
+		for (Puyo* p : AllPuyo) {
+			p->Draw();
+		}
 
 		window->display();
 	}
+}
+
+Puyo* GameManager::createPuyo()
+{
+	Puyo* p = new Puyo(GameGrid->getDimension().x / 2, 0);
+
+	AllPuyo.push_back(p);
+
+	return p;
 }
 
 void GameManager::drawOnWindow(sf::Drawable* d)

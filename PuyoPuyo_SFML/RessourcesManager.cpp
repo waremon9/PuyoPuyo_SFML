@@ -6,12 +6,12 @@ RessourcesManager::RessourcesManager()
 {
 	AllTexture.resize(TextureLabel::CountTexture);
 
-	getTextureFromFile(TextureLabel::PuyoSpriteSheet, "PuyoSpriteSheet.png");
+	getTextureFromFile(TextureLabel::PuyoSpriteSheet, "Assets/PuyoSpriteSheet.png");
 
 
 	AllFont.resize(FontLabel::CountFont);
 
-	getFontFromFile(FontLabel::MLFont, "ML2.ttf");
+	getFontFromFile(FontLabel::MLFont, "Assets/ML2.ttf");
 }
 
 void RessourcesManager::getTextureFromFile(int i, const char* str)

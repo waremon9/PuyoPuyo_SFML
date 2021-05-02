@@ -10,10 +10,10 @@ enum class PuyoState {
 	Neutral, S, N, SN, E, SE, NE, SNE, W, SW, NW, SNW, EW, SEW, NEW, NSEW, Death1, Body, Eyes, Death2, Count
 };
 
-class Puyo : Entity
+class Puyo : public Entity
 {
 private:
-	sf::Vector2f GridCoordinate;
+	sf::Vector2i GridCoordinate;
 	PuyoColor Color;
 	PuyoState State;
 
@@ -21,7 +21,9 @@ private:
 public:
 	Puyo();
 	Puyo(int x, int y);
-	Puyo(sf::Vector2f coord);
+	Puyo(sf::Vector2i coord);
+
+	void setSpriteInfo();
 
 	void Tick(float DeltaTime) override;
 };

@@ -3,7 +3,7 @@
 
 class Entity
 {
-private:
+protected:
 	sf::Sprite* _Sprite;
 	sf::Vector2f Position;
 

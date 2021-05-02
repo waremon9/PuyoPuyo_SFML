@@ -16,7 +16,6 @@ sf::Sprite* Entity::getSprite()
 {
 	return _Sprite;
 }
-
 void Entity::Draw()
 {
 	GameManager::getInstance()->drawOnWindow(_Sprite);
