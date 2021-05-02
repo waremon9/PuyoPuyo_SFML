@@ -20,6 +20,10 @@ GameManager::GameManager()
 
 	//Game grid
 	GameGrid = new Grid(GridSize, CellSize, GridPosition);
+
+	GameSpeed = 1.f;
+	FallCooldown = FallCooldownBase = 1.f / GameSpeed;
+	CurrentPuyo = nullptr;
 }
 
 GameManager* GameManager::getInstance()
@@ -35,6 +39,11 @@ sf::RenderWindow* GameManager::getWindow() const
 	return window;
 }
 
+float GameManager::getGameSpeed() const
+{
+	return GameSpeed;
+}
+
 void GameManager::loop()
 {
 	while (window->isOpen())
@@ -42,6 +51,8 @@ void GameManager::loop()
 		updateDeltaTime();
 
 		manageEvent();
+
+		updateEntitys();
 
 		updateWindow();
 	}
@@ -62,7 +73,22 @@ void GameManager::manageEvent()
 			window->close();
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
-			ActualPuyo = createPuyo();
+			CurrentPuyo = createPuyo();
+
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+			if (CurrentPuyo) CurrentPuyo->moveRight(1);
+
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+			if(CurrentPuyo) CurrentPuyo->moveRight(-1);
+	}
+}
+
+void GameManager::updateEntitys()
+{
+	FallCooldown -= DeltaTime;
+	if (FallCooldown <= 0) {
+		FallCooldown = FallCooldownBase;
+		if(CurrentPuyo)CurrentPuyo->fall();
 	}
 }
 
@@ -86,9 +112,10 @@ void GameManager::updateWindow()
 
 Puyo* GameManager::createPuyo()
 {
-	Puyo* p = new Puyo(GameGrid->getDimension().x / 2, 0);
+	Puyo* p = new Puyo(GameGrid->getDimension().x / 2 - 1, 0);
 
 	AllPuyo.push_back(p);
+	FallCooldown = FallCooldownBase;
 
 	return p;
 }

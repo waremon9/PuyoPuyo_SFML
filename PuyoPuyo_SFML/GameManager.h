@@ -14,11 +14,14 @@ private:
 	float DeltaTime;
 	float Framerate;
 	float NextWindowUpdate;
+	float GameSpeed;
 
 	Grid* GameGrid;
 	std::vector<Puyo*> AllPuyo;
 
-	Puyo* ActualPuyo;
+	Puyo* CurrentPuyo;
+	float FallCooldown;
+	float FallCooldownBase;
 
 public:
 	const int CellSize = 64;
@@ -32,6 +35,7 @@ public:
 	void loop();
 	void updateDeltaTime();
 	void manageEvent();
+	void updateEntitys();
 	void updateWindow();
 
 	Puyo* createPuyo();
@@ -40,5 +44,6 @@ public:
 
 	static GameManager* getInstance();
 	sf::RenderWindow* getWindow() const;
+	float getGameSpeed() const;
 };
 

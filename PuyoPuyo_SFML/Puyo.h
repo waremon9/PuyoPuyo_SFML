@@ -24,6 +24,10 @@ public:
 	Puyo(sf::Vector2i coord);
 
 	void setSpriteInfo();
+	void updatePosition();
+
+	void moveRight(int i);
+	void fall();
 
 	void Tick(float DeltaTime) override;
 };

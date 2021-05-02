@@ -2,6 +2,7 @@
 #include "Util.h"
 #include "GameManager.h"
 #include "RessourcesManager.h"
+#include <iostream>
 
 Puyo::Puyo()
 {
@@ -29,14 +30,38 @@ Puyo::Puyo(sf::Vector2i coord)
 
 void Puyo::setSpriteInfo()
 {
-	GameManager* GM = GameManager::getInstance();
 	RessourcesManager* RM = RessourcesManager::getInstance();
+	GameManager* GM = GameManager::getInstance();
 
 	_Sprite = new sf::Sprite();
-	_Sprite->setPosition((sf::Vector2f)(GridCoordinate * GM->CellSize) + GM->GridPosition);
 	_Sprite->setTexture(*RM->getTexture(RessourcesManager::PuyoSpriteSheet));
 	_Sprite->setTextureRect(sf::IntRect((int)State * GM->PuyoSpriteSize, (int)Color * GM->PuyoSpriteSize, GM->PuyoSpriteSize, GM->PuyoSpriteSize));
 	_Sprite->setScale(2,2);
+
+	updatePosition();
+}
+
+void Puyo::updatePosition()
+{
+	GameManager* GM = GameManager::getInstance();
+	_Sprite->setPosition((sf::Vector2f)(GridCoordinate * GM->CellSize) + GM->GridPosition);
+}
+
+void Puyo::moveRight(int i)
+{
+	GameManager* GM = GameManager::getInstance();
+
+	GridCoordinate.x += i;
+	if (GridCoordinate.x <= 0) GridCoordinate.x = 0;
+	if (GridCoordinate.x >= GM->GridSize.x-1) GridCoordinate.x = GM->GridSize.x-1;
+
+	updatePosition();
+}
+
+void Puyo::fall()
+{
+	GridCoordinate.y++;
+	updatePosition();
 }
 
 PuyoColor Puyo::randomColor()
