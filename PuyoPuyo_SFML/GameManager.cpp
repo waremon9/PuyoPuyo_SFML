@@ -27,6 +27,8 @@ GameManager::GameManager()
 	MainPuyo = nullptr;
 	SecondPuyo = nullptr;
 	_PuyoRotation = PuyoRotation::UP;
+	Gravity = false;
+	GravityCooldown = GravityCooldownBase = FallCooldownBase / 2.f;
 }
 
 GameManager* GameManager::getInstance()
@@ -75,43 +77,60 @@ void GameManager::manageEvent()
 		if (event.type == sf::Event::Closed)
 			window->close();
 
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
-			if (MainPuyo && SecondPuyo) MovePuyoRight();
+		if (!Gravity) {
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+				if (MainPuyo && SecondPuyo) MovePuyoRight();
 
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
-			if (MainPuyo && SecondPuyo) MovePuyoLeft();
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+				if (MainPuyo && SecondPuyo) MovePuyoLeft();
 
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
-			if (MainPuyo && SecondPuyo) RotatePuyoLeft();
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+				if (MainPuyo && SecondPuyo) RotatePuyoLeft();
 
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
-			if (MainPuyo && SecondPuyo) RotatePuyoRight();
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
+				if (MainPuyo && SecondPuyo) RotatePuyoRight();
+		}
 	}
 }
 
 void GameManager::updateEntitys()
 {
-	FallCooldown -= DeltaTime;
-	if (FallCooldown <= 0) {
-		FallCooldown = FallCooldownBase;
+	if (!Gravity) {
 
-		if (MainPuyo && SecondPuyo) {
-			if (MainPuyo->getCoordinate().y < GridSize.y - 1
-			    && SecondPuyo->getCoordinate().y < GridSize.y - 1
-				&& GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(0, 1))  == nullptr
-				&& GameGrid->getElementAt(SecondPuyo->getCoordinate() + sf::Vector2i(0, 1)) == nullptr)
-			{
-				MainPuyo->fall();
-				SecondPuyo->fall();
+		FallCooldown -= DeltaTime;
+		if (FallCooldown <= 0) {
+			FallCooldown = FallCooldownBase;
+
+			if (MainPuyo && SecondPuyo) {
+				if (MainPuyo->getCoordinate().y < GridSize.y - 1
+					&& SecondPuyo->getCoordinate().y < GridSize.y - 1
+					&& GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(0, 1)) == nullptr
+					&& GameGrid->getElementAt(SecondPuyo->getCoordinate() + sf::Vector2i(0, 1)) == nullptr)
+				{
+					MainPuyo->fall();
+					SecondPuyo->fall();
+				}
+				else {
+					GameGrid->addElementAt(MainPuyo->getCoordinate(), MainPuyo);
+					GameGrid->addElementAt(SecondPuyo->getCoordinate(), SecondPuyo);
+					Gravity = true;
+				}
+
 			}
-			else {
-				GameGrid->addElementAt(MainPuyo->getCoordinate(), MainPuyo);
-				GameGrid->addElementAt(SecondPuyo->getCoordinate(), SecondPuyo);
+			else createPuyo();
+		}
+	}
+	else
+	{
+		GravityCooldown -= DeltaTime;
+		if (GravityCooldown <= 0) {
+			GravityCooldown = GravityCooldownBase;
+
+			if (GameGrid->MakePuyoFall()) {
+				Gravity = false;
 				createPuyo();
 			}
-			
 		}
-		else createPuyo();
 	}
 }
 

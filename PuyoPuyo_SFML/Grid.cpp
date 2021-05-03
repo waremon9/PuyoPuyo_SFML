@@ -63,6 +63,22 @@ Puyo* Grid::getElementAt(sf::Vector2i coord)
 	return _Grid[coord.y * Dimension.x + coord.x];
 }
 
+bool Grid::MakePuyoFall()
+{
+	bool endOfWork = true;
+	for (int i = _Grid.size() - 1 - Dimension.x; i >= 0; i--) {
+		if (_Grid[i] != nullptr && _Grid[i + Dimension.x] == nullptr) {
+			_Grid[i]->fall();
+			_Grid[i + Dimension.x] = _Grid[i];
+			_Grid[i] = nullptr;
+
+			endOfWork = false;
+		}
+	}
+
+	return endOfWork;
+}
+
 void Grid::Draw()
 {
 	GameManager* GM = GameManager::getInstance();

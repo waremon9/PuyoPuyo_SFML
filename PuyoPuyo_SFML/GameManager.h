@@ -33,6 +33,10 @@ private:
 	float FallCooldown;
 	float FallCooldownBase;
 
+	bool Gravity;
+	float GravityCooldown;
+	float GravityCooldownBase;
+
 public:
 	const int CellSize = 64;
 	const sf::Vector2i GridSize = sf::Vector2i(6, 13);
