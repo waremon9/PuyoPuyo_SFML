@@ -26,7 +26,10 @@ public:
 	void setSpriteInfo();
 	void updatePosition();
 
-	void moveRight(int i);
+	sf::Vector2i getCoordinate();
+
+	void moveRight();
+	void moveLeft();
 	void fall();
 
 	void Tick(float DeltaTime) override;

@@ -19,8 +19,10 @@ public:
 	void createGridGraphic();
 
 	sf::Vector2i getDimension();
-	Puyo* getElementAt(int, int);
-	Puyo* getElementAt(sf::Vector2i);
+	void addElementAt(int x, int y, Puyo* p);
+	void addElementAt(sf::Vector2i coord, Puyo* p);
+	Puyo* getElementAt(int x, int y);
+	Puyo* getElementAt(sf::Vector2i coord);
 
 	void Draw();
 };

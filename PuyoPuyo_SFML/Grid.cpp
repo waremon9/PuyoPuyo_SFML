@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include "Puyo.h"
 #include "GameManager.h"
+#include <iostream>
 
 Grid::Grid(int x, int y, int cell, sf::Vector2f pos)
 {
@@ -42,14 +43,24 @@ sf::Vector2i Grid::getDimension()
 	return Dimension;
 }
 
+void Grid::addElementAt(int x, int y, Puyo* p)
+{
+	_Grid[y * Dimension.x + x] = p;
+}
+
+void Grid::addElementAt(sf::Vector2i coord, Puyo* p)
+{
+	_Grid[coord.y * Dimension.x + coord.x] = p;
+}
+
 Puyo* Grid::getElementAt(int x, int y)
 {
 	return _Grid[y * Dimension.x + x];
 }
 
-Puyo* Grid::getElementAt(sf::Vector2i s)
+Puyo* Grid::getElementAt(sf::Vector2i coord)
 {
-	return _Grid[s.y * Dimension.x + s.x];
+	return _Grid[coord.y * Dimension.x + coord.x];
 }
 
 void Grid::Draw()

@@ -19,15 +19,16 @@ private:
 	Grid* GameGrid;
 	std::vector<Puyo*> AllPuyo;
 
-	Puyo* CurrentPuyo;
+	Puyo* MainPuyo;
+	Puyo* SecondPuyo;
 	float FallCooldown;
 	float FallCooldownBase;
 
 public:
 	const int CellSize = 64;
-	const sf::Vector2i GridSize = sf::Vector2i(6, 10);
+	const sf::Vector2i GridSize = sf::Vector2i(6, 13);
 	const int PuyoSpriteSize = 32;
-	const sf::Vector2f GridPosition = sf::Vector2f(100, 100);
+	const sf::Vector2f GridPosition = sf::Vector2f(100, 50);
 
 public:
 	GameManager();
@@ -38,7 +39,9 @@ public:
 	void updateEntitys();
 	void updateWindow();
 
-	Puyo* createPuyo();
+	void createPuyo();
+	void MovePuyoRight();
+	void MovePuyoLeft();
 
 	void drawOnWindow(sf::Drawable*);
 

@@ -47,14 +47,20 @@ void Puyo::updatePosition()
 	_Sprite->setPosition((sf::Vector2f)(GridCoordinate * GM->CellSize) + GM->GridPosition);
 }
 
-void Puyo::moveRight(int i)
+sf::Vector2i Puyo::getCoordinate()
 {
-	GameManager* GM = GameManager::getInstance();
+	return GridCoordinate;
+}
 
-	GridCoordinate.x += i;
-	if (GridCoordinate.x <= 0) GridCoordinate.x = 0;
-	if (GridCoordinate.x >= GM->GridSize.x-1) GridCoordinate.x = GM->GridSize.x-1;
+void Puyo::moveRight()
+{
+	GridCoordinate.x++;
+	updatePosition();
+}
 
+void Puyo::moveLeft()
+{
+	GridCoordinate.x--;
 	updatePosition();
 }
 
