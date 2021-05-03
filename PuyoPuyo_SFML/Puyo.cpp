@@ -52,6 +52,12 @@ sf::Vector2i Puyo::getCoordinate()
 	return GridCoordinate;
 }
 
+void Puyo::setCoordinate(sf::Vector2i coord)
+{
+	GridCoordinate = coord;
+	updatePosition();
+}
+
 void Puyo::moveRight()
 {
 	GridCoordinate.x++;

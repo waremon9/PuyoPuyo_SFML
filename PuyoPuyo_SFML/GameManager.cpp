@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "Grid.h"
 #include "Puyo.h"
+#include <iostream>
 
 GameManager* GameManager::Instance = nullptr;
 
@@ -24,6 +25,8 @@ GameManager::GameManager()
 	GameSpeed = 3.f;
 	FallCooldown = FallCooldownBase = 1.f / GameSpeed;
 	MainPuyo = nullptr;
+	SecondPuyo = nullptr;
+	_PuyoRotation = PuyoRotation::UP;
 }
 
 GameManager* GameManager::getInstance()
@@ -76,7 +79,13 @@ void GameManager::manageEvent()
 			if (MainPuyo && SecondPuyo) MovePuyoRight();
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
-			if(MainPuyo && SecondPuyo) MovePuyoLeft();
+			if (MainPuyo && SecondPuyo) MovePuyoLeft();
+
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+			if (MainPuyo && SecondPuyo) RotatePuyoLeft();
+
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
+			if (MainPuyo && SecondPuyo) RotatePuyoRight();
 	}
 }
 
@@ -134,6 +143,7 @@ void GameManager::createPuyo()
 	SecondPuyo = p2;
 	AllPuyo.push_back(p2);
 
+	_PuyoRotation = PuyoRotation::UP;
 	FallCooldown = FallCooldownBase;
 }
 
@@ -158,6 +168,76 @@ void GameManager::MovePuyoLeft()
 	{
 		MainPuyo->moveLeft();
 		SecondPuyo->moveLeft();
+	}
+}
+
+void GameManager::RotatePuyoRight()
+{
+	switch (_PuyoRotation)
+	{
+	case PuyoRotation::UP:
+		if (MainPuyo->getCoordinate().x < GridSize.x - 1
+			&& GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(1,0)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(1,0));
+			_PuyoRotation = PuyoRotation::RIGHT;
+		}
+		break;
+	case PuyoRotation::RIGHT:
+		if (GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(0,1)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(0, 1));
+			_PuyoRotation = PuyoRotation::DOWN;
+		}
+		break;
+	case PuyoRotation::DOWN:
+		if (MainPuyo->getCoordinate().x > 0
+			&& GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(-1,0)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(-1, 0));
+			_PuyoRotation = PuyoRotation::LEFT;
+		}
+		break;
+	case PuyoRotation::LEFT:
+		if (GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(0,-1)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(0, -1));
+			_PuyoRotation = PuyoRotation::UP;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void GameManager::RotatePuyoLeft()
+{
+	switch (_PuyoRotation)
+	{
+	case PuyoRotation::DOWN:
+		if (MainPuyo->getCoordinate().x < GridSize.x - 1
+			&& GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(1, 0)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(1, 0));
+			_PuyoRotation = PuyoRotation::RIGHT;
+		}
+		break;
+	case PuyoRotation::LEFT:
+		if (GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(0, 1)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(0, 1));
+			_PuyoRotation = PuyoRotation::DOWN;
+		}
+		break;
+	case PuyoRotation::UP:
+		if (MainPuyo->getCoordinate().x > 0
+			&& GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(-1, 0)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(-1, 0));
+			_PuyoRotation = PuyoRotation::LEFT;
+		}
+		break;
+	case PuyoRotation::RIGHT:
+		if (GameGrid->getElementAt(MainPuyo->getCoordinate() + sf::Vector2i(0, -1)) == nullptr) {
+			SecondPuyo->setCoordinate(MainPuyo->getCoordinate() + sf::Vector2i(0, -1));
+			_PuyoRotation = PuyoRotation::UP;
+		}
+		break;
+	default:
+		break;
 	}
 }
 

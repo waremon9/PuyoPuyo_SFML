@@ -27,6 +27,7 @@ public:
 	void updatePosition();
 
 	sf::Vector2i getCoordinate();
+	void setCoordinate(sf::Vector2i coord);
 
 	void moveRight();
 	void moveLeft();

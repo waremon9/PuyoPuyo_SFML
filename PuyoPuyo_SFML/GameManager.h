@@ -4,6 +4,13 @@
 class Grid;
 class Puyo;
 
+enum class PuyoRotation {
+	UP,
+	LEFT,
+	DOWN,
+	RIGHT
+};
+
 class GameManager
 {
 private:
@@ -21,6 +28,8 @@ private:
 
 	Puyo* MainPuyo;
 	Puyo* SecondPuyo;
+	PuyoRotation _PuyoRotation;
+
 	float FallCooldown;
 	float FallCooldownBase;
 
@@ -42,6 +51,8 @@ public:
 	void createPuyo();
 	void MovePuyoRight();
 	void MovePuyoLeft();
+	void RotatePuyoRight();
+	void RotatePuyoLeft();
 
 	void drawOnWindow(sf::Drawable*);
 
