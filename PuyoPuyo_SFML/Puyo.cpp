@@ -52,10 +52,25 @@ sf::Vector2i Puyo::getCoordinate()
 	return GridCoordinate;
 }
 
+PuyoColor Puyo::getColor()
+{
+	return Color;
+}
+
+bool Puyo::getDelete()
+{
+	return ToDelete;
+}
+
 void Puyo::setCoordinate(sf::Vector2i coord)
 {
 	GridCoordinate = coord;
 	updatePosition();
+}
+
+void Puyo::setDelete(bool b)
+{
+	ToDelete = b;
 }
 
 void Puyo::moveRight()
@@ -78,7 +93,7 @@ void Puyo::fall()
 
 PuyoColor Puyo::randomColor()
 {
-	return PuyoColor(RandomInt(0, static_cast<int>(PuyoColor::Count)));
+	return PuyoColor(RandomInt(0, GameManager::getInstance()->QteColor));
 }
 
 void Puyo::Tick(float DeltaTime)

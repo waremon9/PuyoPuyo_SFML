@@ -42,6 +42,7 @@ public:
 	const sf::Vector2i GridSize = sf::Vector2i(6, 13);
 	const int PuyoSpriteSize = 32;
 	const sf::Vector2f GridPosition = sf::Vector2f(100, 50);
+	int QteColor = 4;
 
 public:
 	GameManager();
@@ -51,6 +52,7 @@ public:
 	void manageEvent();
 	void updateEntitys();
 	void updateWindow();
+	void DeleteEntity();
 
 	void createPuyo();
 	void MovePuyoRight();

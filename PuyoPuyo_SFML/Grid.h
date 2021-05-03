@@ -24,8 +24,11 @@ public:
 	void addElementAt(sf::Vector2i coord, Puyo* p);
 	Puyo* getElementAt(int x, int y);
 	Puyo* getElementAt(sf::Vector2i coord);
+	void removeElementAt(int x, int y);
+	void removeElementAt(sf::Vector2i coord);
 
 	bool MakePuyoFall();
+	bool CheckForGroup();
 
 	void Draw();
 };

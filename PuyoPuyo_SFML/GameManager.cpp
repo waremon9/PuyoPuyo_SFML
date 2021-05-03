@@ -59,6 +59,8 @@ void GameManager::loop()
 
 		updateEntitys();
 
+		DeleteEntity();
+
 		updateWindow();
 	}
 }
@@ -127,8 +129,10 @@ void GameManager::updateEntitys()
 			GravityCooldown = GravityCooldownBase;
 
 			if (GameGrid->MakePuyoFall()) {
-				Gravity = false;
-				createPuyo();
+				if (!GameGrid->CheckForGroup()) {
+					Gravity = false;
+					createPuyo();
+				}
 			}
 		}
 	}
@@ -149,6 +153,17 @@ void GameManager::updateWindow()
 		}
 
 		window->display();
+	}
+}
+
+void GameManager::DeleteEntity()
+{
+	for (int i = AllPuyo.size() - 1; i >= 0; i--) {
+		if (AllPuyo[i]->getDelete()) {
+			GameGrid->removeElementAt(AllPuyo[i]->getCoordinate());
+			delete AllPuyo[i];
+			AllPuyo.erase(AllPuyo.begin() + i);
+		}
 	}
 }
 

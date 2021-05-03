@@ -17,6 +17,8 @@ private:
 	PuyoColor Color;
 	PuyoState State;
 
+	bool ToDelete = false;
+
 	PuyoColor randomColor();
 public:
 	Puyo();
@@ -27,7 +29,11 @@ public:
 	void updatePosition();
 
 	sf::Vector2i getCoordinate();
+	PuyoColor getColor();
+	bool getDelete();
+
 	void setCoordinate(sf::Vector2i coord);
+	void setDelete(bool b);
 
 	void moveRight();
 	void moveLeft();
