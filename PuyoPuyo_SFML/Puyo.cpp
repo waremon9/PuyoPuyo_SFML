@@ -31,11 +31,10 @@ Puyo::Puyo(sf::Vector2i coord)
 void Puyo::setSpriteInfo()
 {
 	RessourcesManager* RM = RessourcesManager::getInstance();
-	GameManager* GM = GameManager::getInstance();
 
 	_Sprite = new sf::Sprite();
 	_Sprite->setTexture(*RM->getTexture(RessourcesManager::PuyoSpriteSheet));
-	_Sprite->setTextureRect(sf::IntRect((int)State * GM->PuyoSpriteSize, (int)Color * GM->PuyoSpriteSize, GM->PuyoSpriteSize, GM->PuyoSpriteSize));
+	updateSpriteRect();
 	_Sprite->setScale(2,2);
 
 	updatePosition();
@@ -45,6 +44,12 @@ void Puyo::updatePosition()
 {
 	GameManager* GM = GameManager::getInstance();
 	_Sprite->setPosition((sf::Vector2f)(GridCoordinate * GM->CellSize) + GM->GridPosition);
+}
+
+void Puyo::updateSpriteRect()
+{
+	GameManager* GM = GameManager::getInstance();
+	_Sprite->setTextureRect(sf::IntRect((int)State * GM->PuyoSpriteSize, (int)Color * GM->PuyoSpriteSize, GM->PuyoSpriteSize, GM->PuyoSpriteSize));
 }
 
 sf::Vector2i Puyo::getCoordinate()
@@ -71,6 +76,11 @@ void Puyo::setCoordinate(sf::Vector2i coord)
 void Puyo::setDelete(bool b)
 {
 	ToDelete = b;
+}
+
+void Puyo::setState(PuyoState ps)
+{
+	State = ps;
 }
 
 void Puyo::moveRight()

@@ -74,6 +74,31 @@ void Grid::removeElementAt(sf::Vector2i coord)
 	_Grid[coord.y * Dimension.x + coord.x] = nullptr;
 }
 
+//Return pointer to adjacent puyo. no puyo and out of grid is nullptr
+std::vector<Puyo*> Grid::getAdjacentPuyo(Puyo* p)
+{
+	std::vector<Puyo*> adjPuyo;
+
+	if (p->getCoordinate().x > 0) {//left from actual
+		adjPuyo.push_back(getElementAt(p->getCoordinate() + sf::Vector2i(-1, 0)));
+	}
+	else adjPuyo.push_back(nullptr);
+	if (p->getCoordinate().y > 0) {//up from actual
+		adjPuyo.push_back(getElementAt(p->getCoordinate() + sf::Vector2i(0, -1)));
+	}
+	else adjPuyo.push_back(nullptr);
+	if (p->getCoordinate().x < Dimension.x - 1) {//right from actual
+		adjPuyo.push_back(getElementAt(p->getCoordinate() + sf::Vector2i(1, 0)));
+	}
+	else adjPuyo.push_back(nullptr);
+	if (p->getCoordinate().y < Dimension.y - 1) {//down from actual
+		adjPuyo.push_back(getElementAt(p->getCoordinate() + sf::Vector2i(0, 1)));
+	}
+	else adjPuyo.push_back(nullptr);
+
+	return adjPuyo;
+}
+
 bool Grid::MakePuyoFall()
 {
 	bool endOfWork = true;
@@ -85,6 +110,10 @@ bool Grid::MakePuyoFall()
 
 			endOfWork = false;
 		}
+	}
+
+	for (Puyo* puyo : _Grid) {
+		if(puyo) DeterminePuyoState(puyo);
 	}
 
 	return endOfWork;
@@ -113,29 +142,9 @@ bool Grid::CheckForGroup()
 
 					ActualGroup.push_back(Actual);
 
-					if (Actual->getCoordinate().x > 0) {//left from actual
-						Puyo* left = getElementAt(Actual->getCoordinate() + sf::Vector2i(-1, 0));
-						//exist? same color? not already done?
-						if (left != nullptr && left->getColor() == Actual->getColor() && !ContainPuyo(CheckedPuyo, left)) {
-							ToCheck.push_back(left);
-						}
-					}
-					if (Actual->getCoordinate().y > 0) {//up from actual
-						Puyo* up = getElementAt(Actual->getCoordinate() + sf::Vector2i(0, -1));
-						if (up != nullptr && up->getColor() == Actual->getColor() && !ContainPuyo(CheckedPuyo, up)) {
-							ToCheck.push_back(up);
-						}
-					}
-					if (Actual->getCoordinate().x < Dimension.x - 1) {//right from actual
-						Puyo* right = getElementAt(Actual->getCoordinate() + sf::Vector2i(1, 0));
-						if (right != nullptr && right->getColor() == Actual->getColor() && !ContainPuyo(CheckedPuyo, right)) {
-							ToCheck.push_back(right);
-						}
-					}
-					if (Actual->getCoordinate().y < Dimension.y - 1) {//down from actual
-						Puyo* down = getElementAt(Actual->getCoordinate() + sf::Vector2i(0, 1));
-						if (down != nullptr && down->getColor() == Actual->getColor() && !ContainPuyo(CheckedPuyo, down)) {
-							ToCheck.push_back(down);
+					for (Puyo* adjacent : getAdjacentPuyo(Actual)) {
+						if (adjacent != nullptr && adjacent->getColor() == Actual->getColor() && !ContainPuyo(CheckedPuyo, adjacent)) {
+							ToCheck.push_back(adjacent);
 						}
 					}
 
@@ -151,6 +160,37 @@ bool Grid::CheckForGroup()
 		}
 	}
 	return group;
+}
+
+void Grid::DeterminePuyoState(Puyo* p)
+{
+	bool UP = false, LEFT = false, DOWN = false, RIGHT = false;
+
+	std::vector<Puyo*> adjPuyo = getAdjacentPuyo(p);
+
+	if (adjPuyo[0] != nullptr && adjPuyo[0]->getColor() == p->getColor()) LEFT = true;
+	if (adjPuyo[1] != nullptr && adjPuyo[1]->getColor() == p->getColor()) UP = true;
+	if (adjPuyo[2] != nullptr && adjPuyo[2]->getColor() == p->getColor()) RIGHT = true;
+	if (adjPuyo[3] != nullptr && adjPuyo[3]->getColor() == p->getColor()) DOWN = true;
+
+	if (!UP && !RIGHT && !DOWN && !LEFT) p->setState(PuyoState::Neutral);
+	if (UP && !RIGHT && !DOWN && !LEFT) p->setState(PuyoState::N);
+	if (!UP && RIGHT && !DOWN && !LEFT) p->setState(PuyoState::E);
+	if (!UP && !RIGHT && DOWN && !LEFT) p->setState(PuyoState::S);
+	if (!UP && !RIGHT && !DOWN && LEFT) p->setState(PuyoState::W);
+	if (UP && !RIGHT && DOWN && !LEFT) p->setState(PuyoState::SN);
+	if (!UP && RIGHT && !DOWN && LEFT) p->setState(PuyoState::EW);
+	if (UP && RIGHT && !DOWN && !LEFT) p->setState(PuyoState::NE);
+	if (UP && !RIGHT && !DOWN && LEFT) p->setState(PuyoState::NW);
+	if (!UP && RIGHT && DOWN && !LEFT) p->setState(PuyoState::SE);
+	if (!UP && !RIGHT && DOWN && LEFT) p->setState(PuyoState::SW);
+	if (UP && RIGHT && DOWN && !LEFT) p->setState(PuyoState::SNE);
+	if (UP && RIGHT && !DOWN && LEFT) p->setState(PuyoState::NEW);
+	if (UP && !RIGHT && DOWN && LEFT) p->setState(PuyoState::SNW);
+	if (!UP && RIGHT && DOWN && LEFT) p->setState(PuyoState::SEW);
+	if (UP && RIGHT && DOWN && LEFT) p->setState(PuyoState::NSEW);
+
+	p->updateSpriteRect();
 }
 
 void Grid::Draw()

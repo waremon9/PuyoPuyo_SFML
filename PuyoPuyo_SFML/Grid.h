@@ -26,9 +26,11 @@ public:
 	Puyo* getElementAt(sf::Vector2i coord);
 	void removeElementAt(int x, int y);
 	void removeElementAt(sf::Vector2i coord);
+	std::vector<Puyo*> getAdjacentPuyo(Puyo* p);
 
 	bool MakePuyoFall();
 	bool CheckForGroup();
+	void DeterminePuyoState(Puyo* p);
 
 	void Draw();
 };

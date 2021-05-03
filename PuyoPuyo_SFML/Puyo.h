@@ -27,6 +27,7 @@ public:
 
 	void setSpriteInfo();
 	void updatePosition();
+	void updateSpriteRect();
 
 	sf::Vector2i getCoordinate();
 	PuyoColor getColor();
@@ -34,6 +35,7 @@ public:
 
 	void setCoordinate(sf::Vector2i coord);
 	void setDelete(bool b);
+	void setState(PuyoState ps);
 
 	void moveRight();
 	void moveLeft();

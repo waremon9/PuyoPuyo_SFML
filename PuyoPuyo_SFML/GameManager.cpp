@@ -115,6 +115,14 @@ void GameManager::updateEntitys()
 				else {
 					GameGrid->addElementAt(MainPuyo->getCoordinate(), MainPuyo);
 					GameGrid->addElementAt(SecondPuyo->getCoordinate(), SecondPuyo);
+
+					for (Puyo* adj : GameGrid->getAdjacentPuyo(MainPuyo)) {
+						if (adj) GameGrid->DeterminePuyoState(adj);
+					}
+					for (Puyo* adj : GameGrid->getAdjacentPuyo(SecondPuyo)) {
+						if (adj) GameGrid->DeterminePuyoState(adj);
+					}
+
 					Gravity = true;
 				}
 
