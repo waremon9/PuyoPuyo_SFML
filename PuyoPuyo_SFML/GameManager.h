@@ -32,6 +32,7 @@ private:
 
 	float FallCooldown;
 	float FallCooldownBase;
+	bool FastFall;
 
 	bool Gravity;
 	float GravityCooldown;
@@ -47,6 +48,7 @@ public:
 	const sf::Vector2i GridSize = sf::Vector2i(6, 13);
 	const int PuyoSpriteSize = 32;
 	const sf::Vector2f GridPosition = sf::Vector2f(100, 50);
+	const float FastFallSpeedMulti = 6.5f;
 
 	int QteColor = 4;
 

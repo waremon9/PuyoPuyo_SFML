@@ -22,13 +22,13 @@ GameManager::GameManager()
 	//Game grid
 	GameGrid = new Grid(GridSize, CellSize, GridPosition);
 
-	GameSpeed = 3.f;
+	GameSpeed = 1.f;
 	FallCooldown = FallCooldownBase = 1.f / GameSpeed;
 	MainPuyo = nullptr;
 	SecondPuyo = nullptr;
 	_PuyoRotation = PuyoRotation::UP;
 	Gravity = false;
-	GravityCooldown = GravityCooldownBase = FallCooldownBase / 2.f;
+	GravityCooldown = GravityCooldownBase = FallCooldownBase / FastFallSpeedMulti;
 	ChainBonus = 0;
 	Score = 0;
 	FastFall = false;
@@ -95,6 +95,12 @@ void GameManager::manageEvent()
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Z)
 				if (MainPuyo && SecondPuyo) RotatePuyoRight();
 		}
+
+		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
+			FastFall = true;
+
+		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Down)
+			FastFall = false;
 	}
 }
 
@@ -102,7 +108,12 @@ void GameManager::updateEntitys()
 {
 	if (!Gravity) {
 
-		FallCooldown -= DeltaTime;
+		if (FastFall) {
+			FallCooldown -= DeltaTime * FastFallSpeedMulti;
+		}
+		else {
+			FallCooldown -= DeltaTime;
+		}
 		if (FallCooldown <= 0) {
 			FallCooldown = FallCooldownBase;
 
