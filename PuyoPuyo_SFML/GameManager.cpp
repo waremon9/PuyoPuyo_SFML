@@ -29,6 +29,9 @@ GameManager::GameManager()
 	_PuyoRotation = PuyoRotation::UP;
 	Gravity = false;
 	GravityCooldown = GravityCooldownBase = FallCooldownBase / 2.f;
+	ChainBonus = 0;
+	Score = 0;
+	FastFall = false;
 }
 
 GameManager* GameManager::getInstance()
@@ -137,9 +140,16 @@ void GameManager::updateEntitys()
 			GravityCooldown = GravityCooldownBase;
 
 			if (GameGrid->MakePuyoFall()) {
-				if (!GameGrid->CheckForGroup()) {
+				ActualGroup = GameGrid->CheckForGroup();
+				if (ActualGroup.size()==0) {
 					Gravity = false;
+					ChainBonus = 0;
 					createPuyo();
+				}
+				else
+				{
+					ChainBonus++;
+					calculateGroupScore();
 				}
 			}
 		}
@@ -281,6 +291,69 @@ void GameManager::RotatePuyoLeft()
 	default:
 		break;
 	}
+}
+
+void GameManager::calculateGroupScore()
+{
+	int groupScore = 0;
+
+	int ChaB = 0;
+	if (ChainBonus == 2) {
+		ChaB = 8;
+	}
+	else if(ChainBonus == 3) {
+		ChaB = 16;
+	}
+	else if (ChainBonus > 3) {
+		ChaB = 32;
+		while (ChainBonus > 4) {
+			ChaB += 32;
+			ChainBonus--;
+		}
+	}
+
+	std::vector<PuyoColor> colors;
+	bool alreadyIn = false;
+	int ColDiff = 0;
+
+	for (std::vector<Puyo*> chain : ActualGroup) {
+		alreadyIn = false;
+		for (PuyoColor p : colors) {
+			if (chain[0]->getColor() == p) {
+				alreadyIn = true;
+			}
+		}
+		if (!alreadyIn) ColDiff++;
+	}
+
+	int ColB = 0;
+	while (ColDiff>1)
+	{
+		ColB += 3;
+	}
+
+	for (std::vector<Puyo*> chain : ActualGroup) {
+		int GB = 0;
+		int taille = chain.size();
+		if (taille > 4 && taille < 11) GB = taille - 3;
+		else if (taille >= 11) GB = 10;
+
+		int allBonus = ChaB + ColB + GB;
+		if (allBonus <= 0) allBonus = 1;
+
+		std::cout << allBonus << "\n";
+
+		groupScore += (chain.size() * 10) * (allBonus);
+	}
+
+	addScore(groupScore);
+}
+
+void GameManager::addScore(int s)
+{
+	Score += s;
+
+	std::cout << Score << "\n";
 }
 
 void GameManager::drawOnWindow(sf::Drawable* d)

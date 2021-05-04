@@ -29,7 +29,7 @@ public:
 	std::vector<Puyo*> getAdjacentPuyo(Puyo* p);
 
 	bool MakePuyoFall();
-	bool CheckForGroup();
+	std::vector<std::vector<Puyo*>> CheckForGroup();
 	void DeterminePuyoState(Puyo* p);
 
 	void Draw();

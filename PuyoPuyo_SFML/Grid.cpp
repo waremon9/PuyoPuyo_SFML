@@ -119,13 +119,15 @@ bool Grid::MakePuyoFall()
 	return endOfWork;
 }
 
-bool Grid::CheckForGroup()
+std::vector<std::vector<Puyo*>> Grid::CheckForGroup()
 {
-	bool group = false;
+	std::vector<std::vector<Puyo*>> group;
 	std::vector<Puyo*> CheckedPuyo;
 	std::vector<Puyo*> ToCheck;
 	Puyo* Actual;
 	std::vector<Puyo*> ActualGroup;
+
+	GameManager* GM = GameManager::getInstance();
 
 	for (Puyo* p : _Grid) {
 		if (p != nullptr && !ContainPuyo(CheckedPuyo, p)) {
@@ -152,7 +154,8 @@ bool Grid::CheckForGroup()
 				}
 			}
 			if (ActualGroup.size() >= 4) {
-				group = true;
+				group.push_back(ActualGroup);
+
 				for (Puyo* puyo : ActualGroup) {
 					puyo->setDelete(true);
 				}

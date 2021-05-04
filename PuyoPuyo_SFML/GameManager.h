@@ -37,11 +37,17 @@ private:
 	float GravityCooldown;
 	float GravityCooldownBase;
 
+	int ChainBonus;
+	std::vector<std::vector<Puyo*>> ActualGroup;
+
+	int Score;
+
 public:
 	const int CellSize = 64;
 	const sf::Vector2i GridSize = sf::Vector2i(6, 13);
 	const int PuyoSpriteSize = 32;
 	const sf::Vector2f GridPosition = sf::Vector2f(100, 50);
+
 	int QteColor = 4;
 
 public:
@@ -59,6 +65,9 @@ public:
 	void MovePuyoLeft();
 	void RotatePuyoRight();
 	void RotatePuyoLeft();
+
+	void calculateGroupScore();
+	void addScore(int s);
 
 	void drawOnWindow(sf::Drawable*);
 
