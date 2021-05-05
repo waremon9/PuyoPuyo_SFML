@@ -147,6 +147,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="HUDManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Puyo.cpp" />
     <ClCompile Include="RessourcesManager.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="HUDManager.h" />
     <ClInclude Include="Puyo.h" />
     <ClInclude Include="RessourcesManager.h" />
     <ClInclude Include="Util.h" />

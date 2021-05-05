@@ -41,7 +41,7 @@ private:
 	int ChainBonus;
 	std::vector<std::vector<Puyo*>> ActualGroup;
 
-	int Score;
+	int ScorePlayer1;
 
 public:
 	const int CellSize = 64;
@@ -76,5 +76,6 @@ public:
 	static GameManager* getInstance();
 	sf::RenderWindow* getWindow() const;
 	float getGameSpeed() const;
+	int getScoreplayer1() const;
 };
 

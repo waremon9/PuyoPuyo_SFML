@@ -3,6 +3,7 @@
 #include "Grid.h"
 #include "Puyo.h"
 #include <iostream>
+#include "HUDManager.h"
 
 GameManager* GameManager::Instance = nullptr;
 
@@ -30,7 +31,7 @@ GameManager::GameManager()
 	Gravity = false;
 	GravityCooldown = GravityCooldownBase = FallCooldownBase / FastFallSpeedMulti;
 	ChainBonus = 0;
-	Score = 0;
+	ScorePlayer1 = 0;
 	FastFall = false;
 }
 
@@ -50,6 +51,11 @@ sf::RenderWindow* GameManager::getWindow() const
 float GameManager::getGameSpeed() const
 {
 	return GameSpeed;
+}
+
+int GameManager::getScoreplayer1() const
+{
+	return ScorePlayer1;
 }
 
 void GameManager::loop()
@@ -180,6 +186,8 @@ void GameManager::updateWindow()
 		for (Puyo* p : AllPuyo) {
 			p->Draw();
 		}
+
+		HUDManager::getInstance()->Draw();
 
 		window->display();
 	}
@@ -362,9 +370,9 @@ void GameManager::calculateGroupScore()
 
 void GameManager::addScore(int s)
 {
-	Score += s;
+	ScorePlayer1 += s;
 
-	std::cout << Score << "\n";
+	HUDManager::getInstance()->updateScore();
 }
 
 void GameManager::drawOnWindow(sf::Drawable* d)
